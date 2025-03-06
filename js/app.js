@@ -43,20 +43,31 @@ function mostrarAlerta(mensaje){
     }
 }
 
-function buscarImagenes(){
+async function buscarImagenes(){
     const termino = document.querySelector('#termino').value;
     
     const key = '48949581-4f4940fbfcfc0cdc43dc59080';
     const url = `https://pixabay.com/api/?key=${key}&q=${termino}&per_page=${registroPorPagina}&page=${paginaActual}`;
     //console.log(url); //Para verificar si funciona
 
+    /*Cambiamos por el async Await
     fetch(url)
         .then(respuesta => respuesta.json())
         .then(datos => {
             console.log(datos);
             totalPaginas = calcularPaginas(datos.totalHits)
             mostrarImagenes(datos.hits)
-        })
+        })*/
+    
+    try{
+        const respuesta = await fetch(url);
+        //Volvemos a colocar await abajo porque en base a la respuesta anterior se debe ejecutar la siguiente
+        const datos = await respuesta.json();
+        totalPaginas = calcularPaginas(datos.totalHits)
+        mostrarImagenes(datos.hits)
+    } catch(error) {
+        console.log(error);
+    }
 }
 
 function mostrarImagenes(imagenes){
